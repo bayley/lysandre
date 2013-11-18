@@ -3,47 +3,55 @@
 
 #define NONE -1
 
-#define BUG 0
-#define DARK 1
-#define DRAGON 2
-#define ELECTRIC 3
-#define FIGHTING 4
-#define FIRE 5
-#define FLYING 6
-#define GHOST 7
-#define GRASS 8
-#define GROUND 9
-#define ICE 10
-#define NORMAL 11
-#define POISON 12
-#define PSYCHIC 13
-#define ROCK 14
-#define STEEL 15
-#define WATER 16
-#define FAIRY 17
+enum {
+	BUG,
+	DARK,
+	DRAGON,
+	ELECTRIC,
+	FIGHTING,
+	FIRE,
+	FLYING,
+	GHOST,
+	GRASS,
+	GROUND,
+	ICE ,
+	NORMAL ,
+	POISON ,
+	PSYCHIC ,
+	ROCK ,
+	STEEL ,
+	WATER ,
+	FAIRY ,
+};
 
 #define SPECIAL 0
 #define PHYSICAL 1
 #define STATUS 3
 
-#define ATK 0
-#define DEF 1
-#define SPA 2
-#define SPD 3
-#define SPE 4
-#define ACC 5
-#define EVA 6
-#define HP 7
+enum {
+	ATK,
+	DEF,
+	SPA,
+	SPD,
+	SPE,
+	ACC,
+	EVA,
+	HP,
+};
 
-#define RAIN 0
-#define SUN 1
-#define SAND 2
-#define HAIL 3
+enum {
+	RAIN,
+	SUN,
+	SAND,
+	HAIL,
+};
 
-#define BURN 0
-#define PARALYZE 1
-#define FREEZE 2
-#define SLEEP 3
+enum {
+	BURN,
+	PARALYZE,
+	FREEZE,
+	SLEEP,
+};
 
 #define HIGH_CH 0x0001
 #define PUNCHING 0x0002
@@ -57,120 +65,124 @@
 #define SOUND_BASED 0x0200
 
 //abilities
-#define ADAPTABILITY 0
-#define AFTERMATH 1
-#define AIR_LOCK 2
-#define ANGER_POINT 3
-#define ARENA_TRAP 4
-#define BAD_DREAMS 5
-#define BATTLE_ARMOR 6
-#define BLAZE 7
-#define CHLOROPHYLL 8
-#define CLEAR_BODY 9
-#define CLOUD_NINE 10
-#define COLOR_CHANGE 11
-#define COMPOUNDEYES 12
-#define DAMP 13
-#define DOWNLOAD 14
-#define DRIZZLE 15
-#define DROUGHT 16
-#define DRY_SKIN 17
-#define EARLY_BIRD 18
-#define EFFECT_SPORE 19
-#define FILTER 20
-#define FLAME_BODY 21
-#define FLASH_FIRE 22
-#define GLUTTONY 23
-#define GUTS 24
-#define HEATPROOF 25
-#define HUGE_POWER 26
-#define HUSTLE 27
-#define HYDRATION 28
-#define HYPER_CUTTER 29
-#define ICE_BODY 30
-#define IMMUNITY 31
-#define INNER_FOCUS 32
-#define INSOMNIA 33
-#define INTIMIDATE 34
-#define IRON_FIST 35
-#define KLUTZ 36
-#define LEAF_GUARD 37
-#define LEVITATE 38
-#define LIGHT_METAL 39
-#define ANALYTIC 40
-#define CONTRARY 41
-#define CURSED_BODY 42
-#define DEFEATIST 43
-#define DEFIANT 44
-#define HARVEST 46
-#define ILLUSION 47
-#define IMPOSTER 48
-#define INFILTRATOR 49
-#define IRON_BARBS 50
-#define LIGHTNINGROD 51
-#define LIMBER 52
-#define SNIPER 53
-#define SERENE_GRACE 54
-#define TECHNICIAN 55
-#define STURDY 56
-#define SIMPLE 57
-#define MOLD_BREAKER 58
-#define TURBOBLAZE 59
-#define TERAVOLT 60
-#define MAGIC_BOUNCE 61
-#define STORM_DRAIN 62
-#define WATER_ABSORB 63
-#define FAIRY_AURA 65
-#define DARK_AURA 66
-#define SAP_SIPPER 67
-#define SUCTION_CUPS 68
+enum {
+	ADAPTABILITY,
+	AFTERMATH,
+	AIR_LOCK,
+	ANGER_POINT,
+	ARENA_TRAP,
+	BAD_DREAMS,
+	BATTLE_ARMOR,
+	BLAZE,
+	CHLOROPHYLL,
+	CLEAR_BODY,
+	CLOUD_NINE ,
+	COLOR_CHANGE ,
+	COMPOUNDEYES ,
+	DAMP ,
+	DOWNLOAD ,
+	DRIZZLE ,
+	DROUGHT ,
+	DRY_SKIN ,
+	EARLY_BIRD ,
+	EFFECT_SPORE ,
+	FILTER ,
+	FLAME_BODY ,
+	FLASH_FIRE ,
+	GLUTTONY ,
+	GUTS ,
+	HEATPROOF ,
+	HUGE_POWER ,
+	HUSTLE ,
+	HYDRATION ,
+	HYPER_CUTTER ,
+	ICE_BODY ,
+	IMMUNITY ,
+	INNER_FOCUS ,
+	INSOMNIA ,
+	INTIMIDATE ,
+	IRON_FIST ,
+	KLUTZ ,
+	LEAF_GUARD ,
+	LEVITATE ,
+	LIGHT_METAL ,
+	ANALYTIC ,
+	CONTRARY ,
+	CURSED_BODY ,
+	DEFEATIST ,
+	DEFIANT ,
+	HARVEST ,
+	ILLUSION ,
+	IMPOSTER ,
+	INFILTRATOR ,
+	IRON_BARBS ,
+	LIGHTNINGROD ,
+	LIMBER ,
+	SNIPER ,
+	SERENE_GRACE ,
+	TECHNICIAN ,
+	STURDY ,
+	SIMPLE ,
+	MOLD_BREAKER ,
+	TURBOBLAZE ,
+	TERAVOLT ,
+	MAGIC_BOUNCE ,
+	STORM_DRAIN ,
+	WATER_ABSORB ,
+	FAIRY_AURA ,
+	DARK_AURA ,
+	SAP_SIPPER ,
+	SUCTION_CUPS ,
+};
 
 //moves
-#define ACROBATICS 0
-#define ACUPRESSURE 1
-#define AEROBLAST 2
-#define AGILITY 3
-#define AIR_SLASH 4
-#define AMNESIA 5
-#define ANCIENTPOWER 6
-#define AQUA_JET 7
-#define AQUA_RING 8
-#define AQUA_TAIL 9
-#define AROMATHERAPY 10
-#define ASSIST 11
-#define ATTACK_ORDER 12
-#define AURA_SPHERE 13
-#define BARRIER 14
-#define BELLY_DRUM 15
-#define BLAZE_KICK 16
-#define BLIZZARD 17
-#define BLUE_FLARE 18
-#define BODY_SLAM 19
-#define BOLT_STRIKE 20
-#define BONEMERANG 21
-#define BOUNCE 22
-#define BRAVE_BIRD 23
-#define BRICK_BREAK 24
-#define BUG_BITE 25
-#define BUG_BUZZ 26
-#define BULK_UP 27
-#define BULLET_PUNCH 28
-#define BULLET_SEED 29
-#define CALM_MIND 30
-#define CHARGE_BEAM 31
-#define CIRCLE_THROW 32
-#define CLOSE_COMBAT 33
-#define COIL 34
-#define COSMIC_POWER 35
-#define COTTON_GUARD 36
-#define COUNTER 37
-#define CRABHAMMER 38
-#define CROSS_CHOP 39
-#define CROSS_POISON 40
-#define CRUNCH 41
-#define CURSE 42
-#define DARK_PULSE 43
-#define DARK_VOID 44
+enum {
+	ACROBATICS,
+	ACUPRESSURE,
+	AEROBLAST,
+	AGILITY,
+	AIR_SLASH,
+	AMNESIA,
+	ANCIENTPOWER,
+	AQUA_JET,
+	AQUA_RING,
+	AQUA_TAIL,
+	AROMATHERAPY ,
+	ASSIST ,
+	ATTACK_ORDER ,
+	AURA_SPHERE ,
+	BARRIER ,
+	BELLY_DRUM ,
+	BLAZE_KICK ,
+	BLIZZARD ,
+	BLUE_FLARE ,
+	BODY_SLAM ,
+	BOLT_STRIKE ,
+	BONEMERANG ,
+	BOUNCE ,
+	BRAVE_BIRD ,
+	BRICK_BREAK ,
+	BUG_BITE ,
+	BUG_BUZZ ,
+	BULK_UP ,
+	BULLET_PUNCH ,
+	BULLET_SEED ,
+	CALM_MIND ,
+	CHARGE_BEAM ,
+	CIRCLE_THROW ,
+	CLOSE_COMBAT ,
+	COIL ,
+	COSMIC_POWER ,
+	COTTON_GUARD ,
+	COUNTER ,
+	CRABHAMMER ,
+	CROSS_CHOP ,
+	CROSS_POISON ,
+	CRUNCH ,
+	CURSE ,
+	DARK_PULSE ,
+	DARK_VOID ,
+};
 
 //most common items first
 #define F_BERRY 0x8000
