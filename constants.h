@@ -66,7 +66,6 @@ enum Status {
 #define RECOIL 0x0100
 #define SOUND_BASED 0x0200
 
-//abilities
 enum Ability {
 	ADAPTABILITY,
 	AFTERMATH,
