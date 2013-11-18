@@ -11,19 +11,13 @@
 using namespace std;
 
 #define SG_FACTOR (user->ability == SERENE_GRACE ? 2.0 : 1.0)
-#define secondaryEffect(p,a) if (randf() < p * SG_FACTOR / 100) a
+#define secondaryEffect(p,a) if (randf() < p * SG_FACTOR / 100 && !(user->ability == SHEER_FORCE)) a
+#define setParams(n, b, a, i, t, p, c, f) name = n; _bp = b; _acc = a; id = i; type = t; priority = p; category = c; flags = f
+#define MOVE(n) class n: public Move {public
 
-class Acrobatics: public Move {
-public:
+MOVE(Acrobatics):
 	Acrobatics() {
-		name = "Acrobatics";
-		_bp = 55;
-		_acc = 100;
-		id = ACROBATICS;
-		type = FLYING;
-		priority = 0;
-		category = PHYSICAL;
-		flags = CONTACT;
+		setParams("Acrobatics", 55, 100, ACROBATICS, FLYING, 0, PHYSICAL, CONTACT);
 	}
 	int exec(Pokemon* user,Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
@@ -32,17 +26,9 @@ public:
 		return dmg;
 	}
 };
-
-class Acupressure: public Move {
-public:
+MOVE(Acupressure):
 	Acupressure() {
-		name = "Acupressure";
-		_bp = 0;
-		_acc = 0;
-		id = ACUPRESSURE;
-		type = NORMAL;
-		priority = 0;
-		category = STATUS;
+		setParams("Acupressure", 0, 0, ACUPRESSURE, NORMAL, 0, STATUS, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int rnd = rand() % 7;
@@ -50,52 +36,23 @@ public:
 		return 0;
 	}
 };
-class Aeroblast: public Move {
-public:
+MOVE(Aeroblast):
 	Aeroblast() {
-		name = "Aeroblast";
-		_bp = 100;
-		_acc = 100;
-		id = AEROBLAST;
-		type = FLYING;
-		priority = 0;
-		category = SPECIAL;
-		flags = HIGH_CH;
-	}
-	int exec(Pokemon* user,Pokemon* target) {
-		int dmg = calcDmg(user, target, this);
-		target->takeDmg(dmg);
-		return dmg;
+		setParams("Aeroblast", 100, 100, AEROBLAST, FLYING, 0, SPECIAL, HIGH_CH);
 	}
 };
-class Agility: public Move {
-public:
+MOVE(Agility):
 	Agility() {
-		name = "Agility";
-		_bp = 0;
-		_acc = 0;
-		id = AGILITY;
-		type = PSYCHIC;
-		priority = 0;
-		category = STATUS;
+		setParams("Agility", 0, 0, AGILITY, PSYCHIC, 0, STATUS, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		user->boost(SPE, 2);
-		if (user->mSpe > 6) user->mSpe = 6;
-		if (user->mSpe < -6) user->mSpe = -6;
 		return 0;
 	}
 };
-class AirSlash: public Move {
-public:
+MOVE(AirSlash):
 	AirSlash() {
-		name = "Air Slash";
-		_bp = 70;
-		_acc = 100;
-		id = AIR_SLASH;
-		type = FLYING;
-		priority = 0;
-		category = SPECIAL;
+		setParams("Air Slash", 70, 90, AIR_SLASH, FLYING, 0, SPECIAL, SEC_EFFECT);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
@@ -104,37 +61,22 @@ public:
 		return dmg;
 	}
 };
-class Amnesia: public Move {
-public:
+MOVE(Amnesia):
 	Amnesia() {
-		name = "Amensia";
-		_bp = 0;
-		_acc = 0;
-		id = AMNESIA;
-		type = PSYCHIC;
-		priority = 0;
-		category = STATUS;
+		setParams("Amnesia", 0, 0, AMNESIA, PSYCHIC, 0, STATUS, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		user->boost(SPD, 2);
 		return 0;
 	}
 };
-class AncientPower: public Move {
-public:
+MOVE(AncientPower):
 	AncientPower() {
-		name = "Ancient Power";
-		_bp = 60;
-		_acc = 100;
-		id = ANCIENTPOWER;
-		type = ROCK;
-		priority = 0;
-		category = SPECIAL;
+		setParams("AncientPower", 60, 100, ANCIENTPOWER, ROCK, 0, SPECIAL, SEC_EFFECT);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
 		target->takeDmg(dmg);
-		float rval = randf();
 		secondaryEffect(10, {
 			user->boost(ATK, 1);
 			user->boost(DEF, 1);
@@ -145,39 +87,14 @@ public:
 		return dmg;
 	}
 };
-class PriorityPhysical: public Move {
-public:
-	PriorityPhysical(string s, int t, int i) {
-		name = s;
-		_bp = 40;
-		_acc = 100;
-		id = i;
-		type = t;
-		priority = 1;
-		category = PHYSICAL;
-	}
-	int exec(Pokemon* user, Pokemon* target) {
-		int dmg = calcDmg(user, target, this);
-		target->takeDmg(dmg);
-		return dmg;
+MOVE(AquaJet):
+	AquaJet() {
+		setParams("Aqua Jet", 40, 100, AQUA_JET, WATER, 1, PHYSICAL, 0);
 	}
 };
-class AquaJet: public PriorityPhysical {
-public:
-	AquaJet() 
-		:PriorityPhysical("Aqua Jet", WATER, AQUA_JET) {
-	}
-};
-class AquaRing: public Move {
-public:
+MOVE(AquaRing):
 	AquaRing() {
-		name = "Aqua Ring";
-		_bp = 0;
-		_acc = 0;
-		id = AQUA_RING;
-		type = WATER;
-		priority = 0;
-		category = STATUS;
+		setParams("Aqua Ring", 0, 0, AQUA_RING, WATER, 0, STATUS, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		if (user->side == 1) user->game->aqua1 = 1;
@@ -185,34 +102,14 @@ public:
 		return 0;
 	}
 };
-class AquaTail: public Move {
-public:
+MOVE(AquaTail):
 	AquaTail() {
-		name = "Aqua Tail";
-		_bp = 90;
-		_acc = 90;
-		id = AQUA_TAIL;
-		type = WATER;
-		priority = 0;
-		category = PHYSICAL;
-		flags = CONTACT;
-	}
-	int exec(Pokemon* user, Pokemon* target) {
-		int dmg = calcDmg(user, target, this);
-		target->takeDmg(dmg);
-		return dmg;
+		setParams("Aqua Tail", 90, 90, AQUA_TAIL, WATER, 0, PHYSICAL, 0);
 	}
 };
-class Aromatherapy: public Move {
-public:
+MOVE(Aromatherapy):
 	Aromatherapy() {
-		name = "Aromatherapy";
-		_bp = 0;
-		_acc = 0;
-		id = AROMATHERAPY;
-		type = GRASS;
-		priority = 0;
-		category = STATUS;
+		setParams("Aromatherapy", 0, 0, AROMATHERAPY, GRASS, 0, STATUS, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		for (int i = 6 * (user->side); i < 6 * (user->side) + 6; i++) {
@@ -221,67 +118,28 @@ public:
 		return 0;
 	}
 };
-class AttackOrder: public Move {
-public:
+MOVE(AttackOrder):
 	AttackOrder() {
-		name = "Attack Order";
-		_bp = 90;
-		_acc = 100;
-		id = ATTACK_ORDER;
-		type = BUG;
-		priority = 0;
-		category = PHYSICAL;
-		flags = HIGH_CH;
-	}
-	int exec(Pokemon* user, Pokemon* target) {
-		int dmg = calcDmg(user, target, this);
-		target->takeDmg(dmg);
-		return dmg;
+		setParams("Attack Order", 90, 100, ATTACK_ORDER, BUG, 0, PHYSICAL, HIGH_CH);
 	}
 };
-class AuraSphere: public Move {
-public:
+MOVE(AuraSphere):
 	AuraSphere() {
-		name = "Aura Sphere";
-		_bp = 90;
-		_acc = 0;
-		id = AURA_SPHERE;
-		type = FIGHTING;
-		priority = 0;
-		category = SPECIAL;
-	}
-	int exec(Pokemon* user, Pokemon* target) {
-		int dmg = calcDmg(user, target, this);
-		target->takeDmg(dmg);
-		return dmg;
+		setParams("Aura Sphere", 80, 100, AURA_SPHERE, FIGHTING, 0, SPECIAL, 0);
 	}
 };
-class Barrier: public Move {
-public:
+MOVE(Barrier):
 	Barrier() {
-		name = "Barrier";
-		_bp = 0;
-		_acc = 0;
-		id = BARRIER;
-		type = PSYCHIC;
-		priority = 0;
-		category = STATUS;
+		setParams("Barrier", 0, 0, BARRIER, PSYCHIC, 0, STATUS, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		user->boost(DEF, 2);
 		return 0;
 	}
 };
-class BellyDrum: public Move {
-public:
+MOVE(BellyDrum):
 	BellyDrum() {
-		name = "Belly Drum";
-		_bp = 0;
-		_acc = 0;
-		id = BELLY_DRUM;
-		type = NORMAL;
-		priority = 0;
-		category = STATUS;
+		setParams("Belly Drum", 0, 0, BELLY_DRUM, NORMAL, 0, STATUS, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		if (user->curHP <= user->maxHP / 2) return 0;
@@ -291,34 +149,14 @@ public:
 		return 0;
 	}
 };
-class BlazeKick: public Move {
-public:
+MOVE(BlazeKick):
 	BlazeKick() {
-		name = "Blaze Kick";
-		_bp = 85;
-		_acc = 100;
-		id = BLAZE_KICK;
-		type = FIRE;
-		priority = 0;
-		category = PHYSICAL;
-		flags = CONTACT;
-	}
-	int exec(Pokemon* user, Pokemon* target) {
-		int dmg = calcDmg(user, target, this);
-		user->takeDmg(dmg);
-		return dmg;
+		setParams("Blaze Kick", 85, 100, BLAZE_KICK, FIRE, 0, PHYSICAL, CONTACT);
 	}
 };
-class Blizzard: public Move {
-public:
+MOVE(Blizzard):
 	Blizzard() {
-		name = "Blizzard";
-		_bp = 110;
-		_acc = 70;
-		id = BLIZZARD;
-		type = ICE;
-		priority = 0;
-		category = SPECIAL;
+		setParams("Blizzard", 110, 70, BLIZZARD, ICE, 0, SPECIAL, SEC_EFFECT);
 	}
 	float acc(Pokemon *poke) {
 		if (poke->game->weather == HAIL) return 0;
@@ -331,16 +169,9 @@ public:
 		return dmg;
 	}
 };
-class BlueFlare: public Move {
-public:
+MOVE(BlueFlare):
 	BlueFlare() {
-		name = "Blue Flare";
-		_bp = 130;
-		_acc = 85;
-		id = BLUE_FLARE;
-		type = FIRE;
-		priority = 0;
-		category = SPECIAL;
+		setParams("Blue Flare", 130, 85, BLUE_FLARE, FIRE, 0, SPECIAL, SEC_EFFECT);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
@@ -349,16 +180,9 @@ public:
 		return dmg;
 	}
 };
-class BodySlam: public Move {
-public:
+MOVE(BodySlam):
 	BodySlam() {
-		name = "Body Slam";
-		_bp = 80;
-		_acc = 100;
-		id = BODY_SLAM;
-		type = NORMAL;
-		priority = 0;
-		category = PHYSICAL;
+		setParams("Body Slam", 80, 100, BODY_SLAM, NORMAL, 0, PHYSICAL, SEC_EFFECT);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
@@ -367,16 +191,9 @@ public:
 		return dmg;
 	}
 };
-class BoltStrike: public Move {
-public:
+MOVE(BoltStrike):
 	BoltStrike() {
-		name = "Bolt Strike";
-		_bp = 130;
-		_acc = 85;
-		id = BOLT_STRIKE;
-		type = ELECTRIC;
-		priority = 0;
-		category = PHYSICAL;
+		setParams("Bolt Strike", 130, 85, BOLT_STRIKE, ELECTRIC, 0, PHYSICAL, SEC_EFFECT);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
@@ -385,35 +202,14 @@ public:
 		return dmg;
 	}
 };
-class Bonemerang: public Move {
-public:
+MOVE(Bonemerang):
 	Bonemerang() {
-		name = "Bonemerang";
-		_bp = 50;
-		_acc = 100;
-		id = BONEMERANG;
-		type = GROUND;
-		priority = 0;
-		category = PHYSICAL;
-		flags = TWO_HIT;
-	}
-	int exec(Pokemon* user, Pokemon* target) {
-		int dmg = calcDmg(user, target, this);
-		target->takeDmg(dmg);
-		return dmg;
+		setParams("Bonemerang", 50, 100, BONEMERANG, GROUND, 0, PHYSICAL, TWO_HIT);
 	}
 };
-class Bounce: public Move {
-public:
+MOVE(Bounce):
 	Bounce() {
-		name = "Bounce";
-		_bp = 80;
-		_acc = 100;
-		id = BOUNCE;
-		type = FLYING;
-		priority = 0;
-		category = PHYSICAL;
-		flags = TWO_TURN;
+		setParams("Bounce", 80, 100, BOUNCE, FLYING, 0, PHYSICAL, TWO_TURN);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
@@ -422,17 +218,9 @@ public:
 		return dmg;
 	}
 };
-class BraveBird: public Move {
-public:
+MOVE(BraveBird):
 	BraveBird() {
-		name = "Brave Bird";
-		_bp = 120;
-		_acc = 100;
-		id = BOUNCE;
-		type = FLYING;
-		priority = 0;
-		category = PHYSICAL;
-		flags = RECOIL;
+		setParams("Brave Bird", 120, 100, BRAVE_BIRD, FLYING, 0, PHYSICAL, RECOIL);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
@@ -441,59 +229,40 @@ public:
 		return dmg;
 	}
 };
-class BrickBreak: public Move {
-public:
+MOVE(BrickBreak):
 	BrickBreak() {
-		name = "Brick Break";
-		_bp = 75;
-		_acc = 100;
-		id = BRICK_BREAK;
-		type = FIGHTING;
-		priority = 0;
-		category = PHYSICAL;
+		setParams("Brick Break", 75, 100, BRICK_BREAK, FIGHTING, 0, PHYSICAL, SEC_EFFECT);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
-		if (target->side == 1) {
-			target->game->lightscreen1 = 0;
-			target->game->reflect1 = 0;
-		}
-		if (target->side == 2) {
-			target->game->lightscreen2 = 0;
-			target->game->reflect2 = 0;
+		if (!(user->ability == SHEER_FORCE)) {
+			if (target->side == 1) {
+				target->game->lightscreen1 = 0;
+				target->game->reflect1 = 0;
+			}
+			if (target->side == 2) {
+				target->game->lightscreen2 = 0;
+				target->game->reflect2 = 0;
+			}
 		}
 		int dmg = calcDmg(user, target, this);
 		target->takeDmg(dmg);
 		return dmg;
 	}
 };
-class BugBite: public Move {
-public:
+MOVE(BugBite):
 	BugBite()  {
-		name = "Bug Bite";
-		_bp = 60;
-		_acc = 100;
-		id = BUG_BITE;
-		type = BUG;
-		priority = 0;
-		category = PHYSICAL;
+		setParams("Bug Bite", 60, 100, BUG_BITE, BUG, 0, PHYSICAL, SEC_EFFECT);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
-		if (target->item & F_BERRY) target->item = NONE;
+		if (target->item & F_BERRY && !(user->ability == SHEER_FORCE)) target->item = NONE;
 		target->takeDmg(dmg);
 		return dmg;
 	}
 };
-class BugBuzz: public Move {
-public:
+MOVE(BugBuzz):
 	BugBuzz() {
-		name = "Bug Buzz";
-		_bp = 90;
-		_acc = 100;
-		id = BUG_BUZZ;
-		type = BUG;
-		category = SPECIAL;
-		flags = SOUND_BASED;
+		setParams("Bug Buzz", 90, 100, BUG_BUZZ, BUG, 0, SPECIAL, SEC_EFFECT | SOUND_BASED);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
@@ -502,15 +271,9 @@ public:
 		return dmg;
 	}
 };
-class BulkUp: public Move {
-public:
+MOVE(BulkUp):
 	BulkUp() {
-		name = "Bulk Up";
-		_bp = 0;
-		_acc = 0;
-		id = BULK_UP;
-		type = FIGHTING;
-		category = STATUS;
+		setParams("Bulk Up", 0, 0, BULK_UP, FIGHTING, 0, STATUS, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		target->boost(ATK, 1);
@@ -518,38 +281,20 @@ public:
 		return 0;
 	}
 };
-class BulletPunch: public PriorityPhysical {
-public:
-	BulletPunch() 
-		:PriorityPhysical("Bullet Punch", STEEL, BULLET_PUNCH) {
+MOVE(BulletPunch):
+	BulletPunch() {
+		setParams("Bullet Punch", 40, 100, BULLET_PUNCH, STEEL, 0, PHYSICAL, 0);
 	}
 };
 class BulletSeed: public Move {
 public:
 	BulletSeed() {
-		name = "Bullet Seed";
-		_bp = 25;
-		_acc = 100;
-		id = BULLET_SEED;
-		type = GRASS;
-		category = PHYSICAL;
-		flags = N_HIT;
-	}
-	int exec(Pokemon* user, Pokemon* target) {
-		int dmg = calcDmg(user, target, this);
-		target->takeDmg(dmg);
-		return dmg;
+		setParams("Bullet Seed", 25, 100, BULLET_SEED, GRASS, 0, PHYSICAL, N_HIT);
 	}
 };
-class CalmMind: public Move {
-public:
+MOVE(CalmMind):
 	CalmMind() {
-		name = "Calm Mind";
-		_bp = 0;
-		_acc = 0;
-		id = CALM_MIND;
-		type = PSYCHIC;
-		category = STATUS;
+		setParams("Calm Mind", 0, 0, CALM_MIND, PSYCHIC, 0, STATUS, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		user->boost(SPA, 1);
@@ -557,15 +302,9 @@ public:
 		return 0;
 	}
 };
-class ChargeBeam: public Move {
-public:
+MOVE(ChargeBeam):
 	ChargeBeam() {
-		name = "Charge Beam";
-		_bp = 70;
-		_acc = 90;
-		id = CHARGE_BEAM;
-		type = ELECTRIC;
-		category = SPECIAL;
+		setParams("Charge Beam", 70, 90, CHARGE_BEAM, ELECTRIC, 0, SPECIAL, SEC_EFFECT);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
@@ -574,15 +313,9 @@ public:
 		return dmg;
 	}
 };
-class CircleThrow: public Move {
-public:
+MOVE(CircleThrow):
 	CircleThrow() {
-		name = "Circle Throw";
-		_bp = 60;
-		_acc = 90;
-		id = CIRCLE_THROW;
-		type = FIGHTING;
-		category = PHYSICAL;
+		setParams("Circle Throw", 60, 90, CIRCLE_THROW, FIGHTING, 0, PHYSICAL, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
@@ -602,15 +335,9 @@ public:
 		return dmg;
 	}
 };
-class CloseCombat: public Move {
-public:
+MOVE(CloseCombat):
 	CloseCombat() {
-		name = "Close Combat";
-		_bp = 120;
-		_acc = 100;
-		id = CLOSE_COMBAT;
-		type = FIGHTING;
-		category = PHYSICAL;
+		setParams("Close Combat", 120, 100, CLOSE_COMBAT, FIGHTING, 0, PHYSICAL, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
@@ -620,15 +347,9 @@ public:
 		return dmg;
 	}
 };
-class Coil: public Move {
-public:
+MOVE(Coil):
 	Coil() {
-		name = "Coil";
-		_bp = 0;
-		_acc = 0;
-		id = COIL;
-		type = POISON;
-		category = STATUS;
+		setParams("Coil", 0, 0, COIL, POISON, 0, STATUS, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		user->boost(ATK, 1);
@@ -637,15 +358,9 @@ public:
 		return 0;
 	}
 };
-class CosmicPower: public Move {
-public:
+MOVE(CosmicPower):
 	CosmicPower() {
-		name = "Cosmic Power";
-		_bp = 0;
-		_acc = 0;
-		id = COSMIC_POWER;
-		type = PSYCHIC;
-		category = STATUS;
+		setParams("Cosmic Power", 0, 0, COSMIC_POWER, PSYCHIC, 0, STATUS, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		user->boost(DEF, 1);
@@ -653,15 +368,9 @@ public:
 		return 0;
 	}
 };
-class CottonGuard: public Move {
-public:
+MOVE(CottonGuard):
 	CottonGuard() {
-		name = "Cotton Guard";
-		_bp = 0;
-		_acc = 0;
-		id = COTTON_GUARD;
-		type = GRASS;
-		category = STATUS;
+		setParams("Cotton Guard", 0, 0, COTTON_GUARD, GRASS, 0, STATUS, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		user->boost(DEF, 3);
@@ -671,12 +380,7 @@ public:
 class Counter: public Move {
 public:
 	Counter() {
-		name = "Counter";
-		_bp = 1;
-		_acc = 100;
-		id = COUNTER;
-		type = FIGHTING;
-		category = PHYSICAL;
+		setParams("Counter", 1, 100, COUNTER, FIGHTING, -5, PHYSICAL, 0);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		target->takeDmg(2 * user->game->lastdmg);
@@ -685,35 +389,13 @@ public:
 class CrabHammer: public Move {
 public:
 	CrabHammer() {
-		name = "Crabhammer";
-		_bp = 80;
-		_acc = 90;
-		id = CRABHAMMER;
-		type = WATER;
-		category = PHYSICAL;
-		flags = HIGH_CH;
-	}
-	int exec(Pokemon* user, Pokemon* target) {
-		int dmg = calcDmg(user, target, this);
-		target->takeDmg(dmg);
-		return dmg;
+		setParams("Crabhammer", 80, 90, CRABHAMMER, WATER, 0, PHYSICAL, HIGH_CH);
 	}
 };
 class CrossChop: public Move {
 public:
 	CrossChop() {
-		name = "Cross Chop";
-		_bp = 80;
-		_acc = 100;
-		id = CROSS_CHOP;
-		type = FIGHTING;
-		category = PHYSICAL;
-		flags = HIGH_CH;
-	}
-	int exec(Pokemon* user, Pokemon* target) {
-		int dmg = calcDmg(user, target, this);
-		target->takeDmg(dmg);
-		return dmg;
+		setParams("Cross Chop", 80, 100, CROSS_CHOP, FIGHTING, 0, PHYSICAL, HIGH_CH);
 	}
 };
 #endif

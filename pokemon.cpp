@@ -61,6 +61,7 @@ int Pokemon::takeDmg(int dmg) {
 }
 
 int Pokemon::recoil(int dmg) {
+	if (ability == MAGIC_GUARD) return curHP;
 	curHP -= dmg;
 	if (curHP < 0) curHP = 0;
 	if (curHP == 0 && !game->quiet) cout << name << " fainted!" << endl;
@@ -101,6 +102,7 @@ int Pokemon::boost(int statID, int stages) {
 	if (m_stages == 2) adj = " sharply ";
 	if (m_stages > 2) adj = " drastically ";
 	*modifier += m_stages;
+	if (*modifier >= 6) *modifier = 6;
 	if (!game->quiet) cout << name << "'s " << stat << adj << "increased!" << endl;
 	return *modifier;
 }
@@ -139,6 +141,7 @@ int Pokemon::lower(int statID, int stages) {
 	if (m_stages == 2) adj = " sharply ";
 	if (m_stages > 2) adj = " drastically ";
 	*modifier -= m_stages;
+	if (*modifier < -6) *modifier = -6;
 	if (!game->quiet) cout << name << "'s " << stat << adj << "decreased!" << endl;
 	if (ability == DEFIANT) boost(ATK, 2);
 	return *modifier;
@@ -217,12 +220,15 @@ int Move::bp(Pokemon* poke) {
 	mul *= (poke->flash_fire && type == FIRE ? 1.5 : 1.0);
 	mul *= (poke->ability == FAIRY_AURA && type == FAIRY ||
 		poke->ability == DARK_AURA && type == DARK ? 1.3 : 1.0);
+	mul *= (poke->ability == SHEER_FORCE && flags & SEC_EFFECT ? 1.3 : 1.0);
+	mul *= (poke->ability == RECKLESS && flags & RECOIL ? 1.3 : 1.0);
 	return (int) (_bp * mul);
 }
 
 int Move::exec(Pokemon* user, Pokemon* target) {
-	cout << "Error: something is wrong! Called Move default exec()" << endl;
-	return 0;
+	int dmg = calcDmg(user, target, this);
+	target->takeDmg(dmg);
+	return dmg;
 }
 
 GameState::GameState() {

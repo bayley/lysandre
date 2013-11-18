@@ -65,6 +65,7 @@ enum Status {
 #define N_HIT 0x0080
 #define RECOIL 0x0100
 #define SOUND_BASED 0x0200
+#define SEC_EFFECT 0x0400
 
 enum Ability {
 	ADAPTABILITY,
@@ -134,6 +135,9 @@ enum Ability {
 	DARK_AURA,
 	SAP_SIPPER,
 	SUCTION_CUPS,
+	SHEER_FORCE,
+	MAGIC_GUARD,
+	RECKLESS,
 };
 
 //moves
