@@ -69,6 +69,8 @@ void newGame(GameState* g, Pokemon* mons) {
 	g->safeguard1 = g->safeguard2 = 0;
 	g->ingrain1 = g->ingrain2 = 0;
 	g->aqua1 = g->aqua2 = 0;
+	g->rocks1 = g->rocks2 = 0;
+	g->spikes1 = g->spikes2 = 0;
 	g->weather = NONE;
 	g->lastdmg = 0;
 	g->lastmove = (Move*) 0;
@@ -91,8 +93,10 @@ void newPoke(Pokemon* p, string name, int hp, int atk, int def, int spa, int spd
 	p->mAtk = p->mDef = p->mSpA = p->mSpD = p->mSpe = p->mAcc = 0;
 	p->status = p->flinched = p->protecting = p->rampaging = p->flash_fire = 0;
 	p->confused = p->taunted = 0;
-	p->maxHP = 2 * p->bHP + p->iHP + p->eHP / 4 + 100;
-	p->curHP = p->maxHP;
+	p->seeded = p->destined = p->dmove_flags = 0;
+	p->perishcount = NONE;
+	p->lastidx = NONE;
+	p->dbPartner = (Pokemon*) 0;
 }
 
 void invest(Pokemon* p, int item, int ehp, int eatk, int edef, int espa, int espd, int espe,
@@ -110,6 +114,8 @@ void invest(Pokemon* p, int item, int ehp, int eatk, int edef, int espa, int esp
 	p->iSpA = ispa;
 	p->iSpD = ispd;
 	p->iSpe = ispe;
+	p->maxHP = 2 * p->bHP + p->iHP + p->eHP / 4 + 100;
+	p->curHP = p->maxHP;
 }
 
 void setMoves(Pokemon* p, Move** movetab, int move1, int move2, int move3, int move4) {
@@ -122,7 +128,7 @@ void setMoves(Pokemon* p, Move** movetab, int move1, int move2, int move3, int m
 int checkNegatingAbility(Pokemon* user, Pokemon* target, Move* m) {
 	if (user->ability != MOLD_BREAKER && user->ability != TURBOBLAZE && user->ability != TERAVOLT) {
 		if (m->category == STATUS && target->ability == MAGIC_BOUNCE) {
-			target->use(m, user);
+			target->use_move(m, user);
 			return 0;
 		}
 		if (m->type == GROUND && target->ability == LEVITATE) return 0;

@@ -3,6 +3,18 @@
 
 #define NONE -1
 
+#define HIGH_CH 0x0001
+#define PUNCHING 0x0002
+#define POWDER 0x0004
+#define CONTACT 0x0008
+#define CHARGE_TURN 0x0010
+#define TWO_TURN 0x0020
+#define TWO_HIT 0x0040
+#define N_HIT 0x0080
+#define RECOIL 0x0100
+#define SOUND_BASED 0x0200
+#define SEC_EFFECT 0x0400
+
 enum Type {
 	BUG,
 	DARK,
@@ -24,13 +36,13 @@ enum Type {
 	FAIRY,
 };
 
-enum MoveCategory {
+enum Category {
 	SPECIAL,
 	PHYSICAL,
 	STATUS,
 };
 
-enum Statistic {
+enum Stat {
 	ATK,
 	DEF,
 	SPA,
@@ -55,19 +67,7 @@ enum Status {
 	SLEEP,
 };
 
-#define HIGH_CH 0x0001
-#define PUNCHING 0x0002
-#define POWDER 0x0004
-#define CONTACT 0x0008
-#define CHARGE_TURN 0x0010
-#define TWO_TURN 0x0020
-#define TWO_HIT 0x0040
-#define N_HIT 0x0080
-#define RECOIL 0x0100
-#define SOUND_BASED 0x0200
-#define SEC_EFFECT 0x0400
-
-enum Ability {
+enum Abilities {
 	ADAPTABILITY,
 	AFTERMATH,
 	AIR_LOCK,
@@ -153,7 +153,6 @@ enum Moves {
 	AQUA_RING,
 	AQUA_TAIL,
 	AROMATHERAPY,
-	ASSIST,
 	ATTACK_ORDER,
 	AURA_SPHERE,
 	BARRIER,
@@ -184,9 +183,14 @@ enum Moves {
 	CROSS_CHOP,
 	CROSS_POISON,
 	CRUNCH,
+	CRUSH_CLAW,
 	CURSE,
 	DARK_PULSE,
 	DARK_VOID,
+	DEFOG,
+	DESTINY_BOND,
+	DISABLE,
+	DISCHARGE,
 };
 
 //most common items first

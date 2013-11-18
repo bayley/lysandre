@@ -78,24 +78,31 @@ int Pokemon::boost(int statID, int stages) {
 	case ATK:
 		modifier = &mAtk;
 		stat = "Attack";
+		break;
 	case DEF:
 		modifier = &mDef;
 		stat = "Defense";
+		break;
 	case SPA:
 		modifier = &mSpA;
 		stat = "Special Attack";
+		break;
 	case SPD:
 		modifier = &mSpD;
 		stat = "Special Defense";
+		break;
 	case SPE:
 		modifier = &mSpe;
 		stat = "Speed";
+		break;
 	case ACC:
 		modifier = &mAcc;
 		stat = "Accuracy";
+		break;
 	case EVA:
 		modifier = &mEva;
 		stat = "Evasion";
+		break;
 	}
 	int m_stages = (ability == SIMPLE ? 2 * stages : stages);
 	if (m_stages == 1) adj = " ";
@@ -117,24 +124,31 @@ int Pokemon::lower(int statID, int stages) {
 	case ATK:
 		modifier = &mAtk;
 		stat = "Attack";
+		break;
 	case DEF:
 		modifier = &mDef;
 		stat = "Defense";
+		break;
 	case SPA:
 		modifier = &mSpA;
 		stat = "Special Attack";
+		break;
 	case SPD:
 		modifier = &mSpD;
 		stat = "Special Defense";
+		break;
 	case SPE:
 		modifier = &mSpe;
 		stat = "Speed";
+		break;
 	case ACC:
 		modifier = &mAcc;
 		stat = "Accuracy";
+		break;
 	case EVA:
 		modifier = &mEva;
 		stat = "Evasion";
+		break;
 	}
 	int m_stages = (ability == SIMPLE ? 2 * stages : stages);
 	if (m_stages == 1) adj = " ";
@@ -158,14 +172,19 @@ int Pokemon::inflictStatus(int statusID) {
 	switch (statusID) {
 	case BURN:
 		if (!game->quiet) cout << name << " was burned!" << endl;
+		break;
 	case FREEZE:
 		if (!game->quiet) cout << name << " was frozen solid!" << endl;
+		break;
 	case PARALYZE:
 		if (!game->quiet) cout << name << " was paralyzed!" << endl;
+		break;
 	case SLEEP:
 		if (!game->quiet) cout << name << " fell asleep!" << endl;
+		break;
 	case POISON:
 		if (!game->quiet) cout << name << " was poisoned!" << endl;
+		break;
 	}
 	return status = statusID;
 }
@@ -176,11 +195,11 @@ int Pokemon::flinch() {
 	return flinched = 1;
 }
 
-int Pokemon::use(Move* m, Pokemon* target) {
+int Pokemon::use_move(Move* m, Pokemon* target) {
 	if (!game->quiet) cout << name << " used " << m->name  << "!" << endl;
 	int hits = 1, dmg = 0;
-	if (m->flags | TWO_HIT) hits = 2;
-	if (m->flags | N_HIT) {
+	if (m->flags & TWO_HIT) hits = 2;
+	if (m->flags & N_HIT) {
 		float rhits = randf();
 		if (rhits < 0.33)
 			hits = 2;
@@ -207,7 +226,17 @@ int Pokemon::use(Move* m, Pokemon* target) {
 		}
 		if (item == SHELL_BELL) curHP += dmg / 8;
 	}
+	m->curPP--;
 	return dmg;
+}
+
+int Pokemon::use(int move_index, Pokemon* target) {
+	if (dmove_flags & (1 << move_index)) {
+		cout << "This move is disabled!" << endl;
+		lastidx = NONE;
+	}
+	lastidx = move_index;
+	return use_move(moves[move_index], target);
 }
 
 float Move::acc(Pokemon* poke) {
