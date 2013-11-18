@@ -72,7 +72,6 @@ void newGame(GameState* g, Pokemon* mons) {
 	g->rocks1 = g->rocks2 = 0;
 	g->spikes1 = g->spikes2 = 0;
 	g->weather = NONE;
-	g->lastdmg = 0;
 	g->lastmove = (Move*) 0;
 	g->quiet = 0;
 }
@@ -91,8 +90,8 @@ void newPoke(Pokemon* p, string name, int hp, int atk, int def, int spa, int spd
 	p->type2 = type2;
 	p->side = player;
 	p->mAtk = p->mDef = p->mSpA = p->mSpD = p->mSpe = p->mAcc = 0;
-	p->status = p->flinched = p->protecting = p->rampaging = p->flash_fire = 0;
-	p->confused = p->taunted = 0;
+	p->status = p->flinched = p->protecting = p->enduring = p->rampaging = p->flash_fire = 0;
+	p->confused = p->taunted = p->encored = 0;
 	p->seeded = p->destined = p->dmove_flags = 0;
 	p->perishcount = NONE;
 	p->lastidx = NONE;

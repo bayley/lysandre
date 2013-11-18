@@ -40,6 +40,8 @@ public:
 	int confused;
 	//taunted?
 	int taunted;
+	//encored?
+	int encored;
 	//Leech Seed
 	int seeded;
 	//Destiny Bond
@@ -56,24 +58,31 @@ public:
 	int item;
 	//protecting?
 	int protecting;
+	//enduring?
+	int enduring;
 	//outrage/thrash/petal dance rampage
 	int rampaging;
 	//flash fire boost
 	int flash_fire;
 	//index of last move used
 	int lastidx;
+	//last damage taken
+	int lastdmg;
 	
 	int getStat(int statID);
 	float getAcc();
 	float getEva();
 	int takeDmg(int dmg);
 	int recoil(int dmg);
+	int absorb(Pokemon* target,int healed);
+	int residualDmg(int dmg);
 	int boost(int statID, int stages);
 	int lower(int statID, int stages);
 	int inflictStatus(int statusID);
 	int flinch();
 	int use_move(Move* m, Pokemon* target);
 	int use(int move_index, Pokemon* target);
+	int confuse();
 };
 
 
@@ -108,7 +117,6 @@ public:
 	int gravity;
 	int weather;
 	int quiet;
-	int lastdmg;
 	Move* lastmove;
 };
 

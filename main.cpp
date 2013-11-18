@@ -26,8 +26,8 @@ int main(int argc, char** argv) {
 
 #include "movetab.h"
 
-	setMoves(&mons[0], mtab, ACROBATICS, BARRIER, AEROBLAST, AGILITY);
-	mons[0].use(1, &mons[1]);
+	setMoves(&mons[1], mtab, ACROBATICS, BLIZZARD, AEROBLAST, AGILITY);
+	mons[1].use(1, &mons[0]);
 
 	return 0;
 }

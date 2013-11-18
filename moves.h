@@ -11,7 +11,7 @@
 using namespace std;
 
 #define SG_FACTOR (user->ability == SERENE_GRACE ? 2.0 : 1.0)
-#define secondaryEffect(p,a) if (randf() < p * SG_FACTOR / 100 && !(user->ability == SHEER_FORCE)) a
+#define secondaryEffect(p,a) if (randf() < p * SG_FACTOR / 100 && !(user->ability == SHEER_FORCE) && dmg != 0) a
 #define setParams(n, b, a, i, t, p, c, f, q) name = n; _bp = b; _acc = a; id = i; type = t; priority = p; category = c; flags = f; maxPP = curPP = q
 #define MOVE(n) class n: public Move {public
 
@@ -159,6 +159,7 @@ MOVE(Blizzard):
 		setParams("Blizzard", 110, 70, BLIZZARD, ICE, 0, SPECIAL, SEC_EFFECT, 8);
 	}
 	float acc(Pokemon *poke) {
+		if (poke->ability == NO_GUARD) return 0;
 		if (poke->game->weather == HAIL) return 0;
 		return _acc;
 	}
@@ -167,6 +168,7 @@ MOVE(Blizzard):
 		target->takeDmg(dmg);
 		secondaryEffect(10, target->inflictStatus(FREEZE));
 		return dmg;
+		return 0;
 	}
 };
 MOVE(BlueFlare):
@@ -225,7 +227,7 @@ MOVE(BraveBird):
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
 		target->takeDmg(dmg);
-		user->recoil(dmg / 4);
+		user->recoil(dmg / 3);
 		return dmg;
 	}
 };
@@ -321,7 +323,7 @@ MOVE(CircleThrow):
 		int dmg = calcDmg(user, target, this);
 		int unphazeable = (target->ability == SUCTION_CUPS) || (target->side == 1 ? target->game->ingrain1 : target->game->ingrain2);
 		target->takeDmg(dmg);
-		if (target->curHP != 0 && !unphazeable) {
+		if (target->curHP != 0 && !unphazeable && dmg != 0) {
 			int newactive = (target->side == 1 ? target->game->active1 : target->game->active2);
 			while (newactive == (target->side == 1 ? target->game->active1 : target->game->active2)) {
 				newactive = rand() % 6 + (target->side - 1) * 6;
@@ -342,8 +344,10 @@ MOVE(CloseCombat):
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
 		target->takeDmg(dmg);
-		user->lower(DEF, 1);
-		user->lower(SPD, 1);
+		if (dmg != 0) {
+			user->lower(DEF, 1);
+			user->lower(SPD, 1);
+		}
 		return dmg;
 	}
 };
@@ -382,7 +386,7 @@ MOVE(Counter):
 		setParams("Counter", 1, 100, COUNTER, FIGHTING, -5, PHYSICAL, 0, 32);
 	}
 	int exec(Pokemon* user, Pokemon* target) {
-		target->takeDmg(2 * user->game->lastdmg);
+		target->takeDmg(2 * user->lastdmg);
 	}
 };
 MOVE(CrabHammer):
@@ -483,6 +487,213 @@ MOVE(Disable):
 			target->dmove_flags |= (1 << target->lastidx);
 		}
 		return 0;
+	}
+};
+MOVE(Discharge):
+	Discharge() {
+		setParams("Discharge", 80, 100, DISCHARGE, 0, ELECTRIC, SPECIAL, SEC_EFFECT, 24);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		int dmg = calcDmg(user, target, this);
+		target->takeDmg(dmg);
+		secondaryEffect(30, target->inflictStatus(PARALYZE));
+	}
+};
+MOVE(DoubleTeam):
+	DoubleTeam() {
+		setParams("Double Team", 0, 0, DOUBLE_TEAM, 0, PSYCHIC, STATUS, 0, 32);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		user->boost(EVA, 1);
+	}
+};
+MOVE(DoubleEdge):
+	DoubleEdge() {
+		setParams("Double Edge", 120, 100, DOUBLE_EDGE, 0, NORMAL, PHYSICAL, RECOIL, 24);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		int dmg = calcDmg(user, target, this);
+		target->takeDmg(dmg);
+		user->recoil(dmg / 3);
+		return dmg;
+	}
+};
+MOVE(DracoMeteor):
+	DracoMeteor() {
+		setParams("Draco Meteor", 120, 90, DRACO_METEOR, 0, DRAGON, SPECIAL, 0, 8);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		int dmg = calcDmg(user, target, this);
+		target->takeDmg(dmg);
+		if (dmg != 0) user->lower(SPA, 2);
+		return dmg;
+	}
+};
+MOVE(DragonClaw):
+	DragonClaw() {
+		setParams("Dragon Claw", 80, 100, DRAGON_CLAW, 0, DRAGON, PHYSICAL, 0, 24);
+	}
+};
+MOVE(DragonDance):
+	DragonDance() {
+		setParams("Dragon Dance", 0, 0, DRAGON_DANCE, 0, DRAGON, STATUS, 0, 32);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		user->boost(ATK, 1);
+		user->boost(SPE, 1);
+		return 0;
+	}
+};
+MOVE(DragonPulse):
+	DragonPulse() {
+		setParams("Dragon Pulse", 85, 100, DRAGON_PULSE, 0, DRAGON, SPECIAL, 0, 15);
+	}
+};
+MOVE(DragonRush):
+	DragonRush() {
+		setParams("Dragon Rush", 100, 75, DRAGON_RUSH, 0, DRAGON, PHYSICAL, SEC_EFFECT, 15);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		int dmg = calcDmg(user, target, this);
+		target->takeDmg(dmg);
+		secondaryEffect(20, target->flinch());
+		return dmg;
+	}
+};
+MOVE(DragonTail):
+	DragonTail() {
+		setParams("Dragon Tail", 60, 90, DRAGON_TAIL, DRAGON, 0, PHYSICAL, 0, 16);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		int dmg = calcDmg(user, target, this);
+		int unphazeable = (target->ability == SUCTION_CUPS) || (target->side == 1 ? target->game->ingrain1 : target->game->ingrain2);
+		target->takeDmg(dmg);
+		if (target->curHP != 0 && !unphazeable && dmg != 0) {
+			int newactive = (target->side == 1 ? target->game->active1 : target->game->active2);
+			while (newactive == (target->side == 1 ? target->game->active1 : target->game->active2)) {
+				newactive = rand() % 6 + (target->side - 1) * 6;
+			}
+			if (target->side == 1) {
+				target->game->active1 = newactive;
+			} else {
+				target->game->active2 = newactive;
+			}
+		}
+		return dmg;
+	}
+};
+MOVE(DrainPunch):
+	DrainPunch() {
+		setParams("Drain Punch", 75, 100, DRAIN_PUNCH, FIGHTING, 0, PHYSICAL, 0, 16);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		int dmg = calcDmg(user, target, this);
+		int lastHP = target->curHP;
+		int newHP = target->takeDmg(dmg);
+		int taken = lastHP - newHP;
+		user->absorb(target, taken / 2);
+		return dmg;
+	}
+};
+MOVE(DrillPeck):
+	DrillPeck() {
+		setParams("Drill Peck", 80, 100, DRILL_PECK, FLYING, 0, PHYSICAL, 0, 32);
+	}
+};
+MOVE(DrillRun):
+	DrillRun() {
+		setParams("Drill Run", 80, 100, DRILL_RUN, GROUND, 0, PHYSICAL, HIGH_CH, 16);
+	}
+};
+MOVE(DualChop):
+	DualChop() {
+		setParams("Dual Chop", 40, 100, DUAL_CHOP, DRAGON, 0, PHYSICAL, TWO_HIT, 14);
+	}
+};
+MOVE(DynamicPunch):
+	DynamicPunch() {
+		setParams("DynamicPunch", 100, 50, DYNAMICPUNCH, FIGHTING, 0, PHYSICAL, SEC_EFFECT, 8);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		int dmg = calcDmg(user, target, this);
+		target->takeDmg(dmg);
+		secondaryEffect(100, target->confuse());
+		return dmg;
+	}
+};
+MOVE(EarthPower):
+	EarthPower() {
+		setParams("Earth Power", 90, 100, EARTH_POWER, GROUND, 0, SPECIAL, SEC_EFFECT, 16);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		int dmg = calcDmg(user, target, this);
+		target->takeDmg(dmg);
+		secondaryEffect(10, target->lower(SPD, 1));
+		return dmg;
+	}
+};
+MOVE(Earthquake):
+	Earthquake() {
+		setParams("Earthquake", 100, 100, EARTHQUAKE, GROUND, 0, PHYSICAL, 0, 16);
+	}
+};
+MOVE(Encore):
+	Encore() {
+		setParams("Encore", 0, 0, ENCORE, NORMAL, 0, STATUS, 0, 8);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		target->encored = 1;
+		return 0;
+	}
+};
+MOVE(Endeavor):
+	Endeavor() {
+		setParams("Endeavor", 1, 100, ENDEAVOR, NORMAL, 0, PHYSICAL, 0, 8);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		int lastHP = target->curHP;
+		if (user->curHP < target->curHP) {
+			target->curHP = user->curHP;
+		} else {
+			if (!user->game->quiet) cout << "But it failed!" << endl;
+		}
+		return lastHP - user->curHP;
+	}
+};
+MOVE(Endure):
+	Endure() {
+		setParams("Endure", 0, 0, ENDURE, NORMAL, 0, STATUS, 0, 16);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		user->enduring = 1;
+	}
+};
+MOVE(EnergyBall):
+	EnergyBall() {
+		setParams("Energy Ball", 80, 100, ENERGY_BALL, GRASS, 0, SPECIAL, 0, 16);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		int dmg = calcDmg(user, target, this);
+		target->takeDmg(dmg);
+		secondaryEffect(10, target->lower(SPD, 1));
+		return dmg;
+	}
+};
+MOVE(Entrainment):
+	Entrainment() {
+		setParams("Entrainment", 0, 0, ENTRAINMENT, NORMAL, 0, STATUS, 0, 24);
+	}
+	int exec(Pokemon* user, Pokemon* target) {
+		target->ability = user->ability;
+		return 0;
+	}
+};
+MOVE(Eruption):
+	Eruption() {
+		setParams("Eruption", 150, 100, ERUPTION, FIRE, 0, SPECIAL, 0, 8);
+	}
+	int bp(Pokemon* poke) {
+		return _bp * poke->curHP / poke->maxHP;
 	}
 };
 #endif

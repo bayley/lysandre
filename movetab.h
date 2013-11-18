@@ -16,6 +16,8 @@ AttackOrder m011;
 AuraSphere m012;
 Barrier m013;
 BellyDrum m014;
+BlazeKick m015;
+Blizzard m016;
 
 m000 = Acrobatics();
 m001 = Acupressure();
@@ -32,8 +34,11 @@ m011 = AttackOrder();
 m012 = AuraSphere();
 m013 = Barrier();
 m014 = BellyDrum();
+m015 = BlazeKick();
+m016 = Blizzard();
 
-Move* mtab[14];
+
+Move* mtab[17];
 mtab[0] = &m000;
 mtab[1] = &m001;
 mtab[2] = &m002;
@@ -49,5 +54,7 @@ mtab[11] = &m011;
 mtab[12] = &m012;
 mtab[13] = &m013;
 mtab[14] = &m014;
+mtab[15] = &m015;
+mtab[16] = &m016;
 
 #endif

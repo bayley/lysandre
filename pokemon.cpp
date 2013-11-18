@@ -44,6 +44,7 @@ float Pokemon::getEva() {
 }
 
 int Pokemon::takeDmg(int dmg) {
+	lastdmg = dmg;
 	int sash_flag = 0;
 	if (curHP == maxHP) {
 		if (ability == STURDY) sash_flag = 1;
@@ -51,7 +52,7 @@ int Pokemon::takeDmg(int dmg) {
 	}
 	curHP -= dmg;
 	if (curHP < 0) curHP = 0;
-	if (sash_flag && curHP == 0) {
+	if (sash_flag || enduring && curHP == 0) {
 		curHP = 1;
 		if (item == FOCUS_SASH) item = NONE;
 	}
@@ -66,6 +67,23 @@ int Pokemon::recoil(int dmg) {
 	if (curHP < 0) curHP = 0;
 	if (curHP == 0 && !game->quiet) cout << name << " fainted!" << endl;
 	return curHP;
+}
+
+int Pokemon::absorb(Pokemon* target, int healed) {
+	if (target->ability == LIQUID_OOZE) {
+		if (ability != MAGIC_GUARD) residualDmg(healed);
+		return curHP;
+	}
+	curHP += healed;
+	return curHP;
+}
+
+int Pokemon::residualDmg(int dmg) {
+	if (ability != MAGIC_GUARD) {
+		curHP -= dmg;
+		return dmg;
+	}
+	return 0;
 }
 
 int Pokemon::boost(int statID, int stages) {
@@ -197,6 +215,10 @@ int Pokemon::flinch() {
 
 int Pokemon::use_move(Move* m, Pokemon* target) {
 	if (!game->quiet) cout << name << " used " << m->name  << "!" << endl;
+	if (target->protecting) {
+		if (!game->quiet) cout << target->name << " is protecting itself!" << endl;
+		return 0;
+	}
 	int hits = 1, dmg = 0;
 	if (m->flags & TWO_HIT) hits = 2;
 	if (m->flags & N_HIT) {
@@ -239,7 +261,13 @@ int Pokemon::use(int move_index, Pokemon* target) {
 	return use_move(moves[move_index], target);
 }
 
+int Pokemon::confuse() {
+	if (ability != OWN_TEMPO) confused = 1;
+	return confused;
+}
+
 float Move::acc(Pokemon* poke) {
+	if (poke->ability == NO_GUARD) return 0;
 	return _acc * (poke->game->gravity ? 1.3 : 1.0) * (poke->ability == HUSTLE && category == PHYSICAL ? 0.8: 1.0);
 }
 
