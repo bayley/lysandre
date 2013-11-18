@@ -10,7 +10,7 @@
 
 using namespace std;
 
-#define SG_FACTOR (user->ability == SERENE_GRACE ? 2.0 : 1.0)
+#define SG_FACTOR (1.0 + (user->ability == SERENE_GRACE))
 #define secondaryEffect(p,a) if (randf() < p * SG_FACTOR / 100 && !(user->ability == SHEER_FORCE)) a
 #define setParams(n, b, a, i, t, p, c, f, q) name = n; _bp = b; _acc = a; id = i; type = t; priority = p; category = c; flags = f; maxPP = curPP = q
 #define MOVE(n) class n: public Move {public
