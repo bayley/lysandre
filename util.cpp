@@ -9,6 +9,10 @@
 
 using namespace std;
 
+float randf() {
+	return (float) rand() / RAND_MAX;
+}
+
 int calcStat(int base, int EV, int IV, float nature) {
 	return (int) (nature * (2 * base + EV / 4 + IV));
 }
@@ -26,8 +30,8 @@ int calcDmg(Pokemon* user, Pokemon* target, Move* move) {
 	}
 
 	float stab = move->type == user->type1 || move->type == user->type2 ? (user->ability == ADAPTABILITY ? 2.0 : 1.5) : 1.0;
-	float rval = (float) rand() / RAND_MAX;
-	float rch = (float) rand() / RAND_MAX;
+	float rval = randf();
+	float rch = randf();
 	int crit = rch < 1.0 / (move->flags & HIGH_CH ? 8 : 16);
 	if (crit) {
 		if (!user->game->quiet) cout << "A critical hit!" << endl;

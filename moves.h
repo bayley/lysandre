@@ -11,6 +11,7 @@
 using namespace std;
 
 #define SG_FACTOR (user->ability == SERENE_GRACE ? 2.0 : 1.0)
+#define secondaryEffect(p,a) if (randf() < p * SG_FACTOR / 100) a
 
 class Acrobatics: public Move {
 public:
@@ -99,8 +100,7 @@ public:
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
 		target->takeDmg(dmg);
-		float rval = (float) rand() / RAND_MAX;
-		if (rval < 0.3 * SG_FACTOR) target->flinch();
+		secondaryEffect(30, target->flinch());
 		return dmg;
 	}
 };
@@ -134,14 +134,14 @@ public:
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
 		target->takeDmg(dmg);
-		float rval = (float) rand() / RAND_MAX;
-		if (rval < 0.1 * SG_FACTOR) {
+		float rval = randf();
+		secondaryEffect(10, {
 			user->boost(ATK, 1);
 			user->boost(DEF, 1);
 			user->boost(SPA, 1);
 			user->boost(SPD, 1);
 			user->boost(SPE, 1);
-		}
+		});
 		return dmg;
 	}
 };
@@ -216,7 +216,7 @@ public:
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		for (int i = 6 * (user->side); i < 6 * (user->side) + 6; i++) {
-			(user->game->pokemon + i)->status = -1;
+			(user->game->pokemon + i)->status = NONE;
 		}
 		return 0;
 	}
@@ -327,6 +327,7 @@ public:
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
 		target->takeDmg(dmg);
+		secondaryEffect(10, target->inflictStatus(FREEZE));
 		return dmg;
 	}
 };
@@ -343,7 +344,7 @@ public:
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
-		if ((float) rand() / RAND_MAX < 0.2 && target->status == NONE) target->status = BURN;
+		secondaryEffect(20, target->inflictStatus(BURN));
 		target->takeDmg(dmg);
 		return dmg;
 	}
@@ -361,7 +362,7 @@ public:
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
-		if ((float) rand() / RAND_MAX < 0.3 && target->status == NONE) target->status = PARALYZE;
+		secondaryEffect(30, target->inflictStatus(PARALYZE));
 		target->takeDmg(dmg);
 		return dmg;
 	}
@@ -379,7 +380,7 @@ public:
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
-		if ((float) rand() / RAND_MAX < 0.2 && target->status == NONE) target->status = PARALYZE;
+		secondaryEffect(20, target->inflictStatus(PARALYZE));
 		target->takeDmg(dmg);
 		return dmg;
 	}
@@ -417,6 +418,7 @@ public:
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
 		target->takeDmg(dmg);
+		secondaryEffect(30, target->inflictStatus(PARALYZE));
 		return dmg;
 	}
 };
@@ -496,7 +498,7 @@ public:
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
 		target->takeDmg(dmg);
-		if ((float) rand() / RAND_MAX < 0.1) target->lower(SPD, 1);
+		secondaryEffect(10, target->lower(SPD, 1));
 		return dmg;
 	}
 };
@@ -567,7 +569,7 @@ public:
 	}
 	int exec(Pokemon* user, Pokemon* target) {
 		int dmg = calcDmg(user, target, this);
-		if ((float) rand() / RAND_MAX < 0.7) user->boost(SPA, 1);
+		secondaryEffect(70, user->boost(SPA, 1));
 		target->takeDmg(dmg);
 		return dmg;
 	}

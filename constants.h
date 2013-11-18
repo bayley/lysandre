@@ -137,7 +137,7 @@ enum Ability {
 };
 
 //moves
-enum Move {
+enum Moves {
 	ACROBATICS,
 	ACUPRESSURE,
 	AEROBLAST,

@@ -178,7 +178,7 @@ int Pokemon::use(Move* m, Pokemon* target) {
 	int hits = 1, dmg = 0;
 	if (m->flags | TWO_HIT) hits = 2;
 	if (m->flags | N_HIT) {
-		float rhits = (float) rand() / RAND_MAX;
+		float rhits = randf();
 		if (rhits < 0.33)
 			hits = 2;
 		else if (rhits < 0.67)
@@ -189,7 +189,7 @@ int Pokemon::use(Move* m, Pokemon* target) {
 			hits = 5;
 	}
 	for (int hit = 0; hit < hits; hit++) {
-		float racc = (float) rand() / RAND_MAX;
+		float racc = randf();
 		float macc = m->acc(this) * getAcc() / target->getEva() / 100;
 		if (macc == 0) macc = 1.0;
 		if (racc > macc) {

@@ -3,6 +3,9 @@
 
 #include "pokemon.h"
 
+//random float between 0 and 1
+float randf();
+
 //computes the non-HP stat of a Pokemon, ignoring boosts
 int calcStat(int base, int EV, int IV, float nature);
 
@@ -24,6 +27,8 @@ void invest(Pokemon* p, int item, int ehp, int eatk, int edef, int espa, int esp
 
 void setMoves(Pokemon* p, Move** movetab, int move1, int move2, int move3, int move4);
 
+//When user uses a move on target, checks if target has an ability which negates it and acts accordingly
+//accounts for Flash Fire boosts, Storm Drain SpA boost, etc.
 int checkNegatingAbility(Pokemon* user, Pokemon* target, Move* m);
 
 #endif
